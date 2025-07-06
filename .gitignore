@@ -1,0 +1,17 @@
+# Python environment folders
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Environment variables
+.env
+
+# Streamlit and cache
+.streamlit/
+*.log
+
+#local files
+.vscode/
+.pytest_cache/
+
