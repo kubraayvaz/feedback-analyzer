@@ -42,7 +42,7 @@ This is an MVP (Minimum Viable Product) of an AI-powered tool that helps product
 ### 1. Clone the Repo
 
 ```bash
-git clone https://github.com/your-username/feedback-analyzer.git
+git clone <repo-git-url>
 cd feedback-analyzer
 ```
 
