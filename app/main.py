@@ -6,6 +6,16 @@ from core import OpenAIAnalyzer
 from core.validator import validate_csv
 
 
+def analyze_feedback_df(df, analyzer, column_name="feedback"):
+    """
+    Applies sentiment analysis, categorization, and summarization to the feedback DataFrame.
+    Returns the updated DataFrame and the summary string.
+    """
+    df = df.copy()
+    df["Sentiment"] = df[column_name].apply(analyzer.analyze_sentiment)
+    df["Category"] = df[column_name].apply(analyzer.classify_category)
+    summary = analyzer.summarize_feedback(df[column_name].tolist())
+    return df, summary
 
 # Set up page
 st.set_page_config(page_title="Customer Feedback Analyzer", layout="wide")
@@ -16,8 +26,7 @@ uploaded_file = st.file_uploader("Upload a CSV file with a 'Feedback' column", t
 column_name = "feedback"
 
 if uploaded_file:
-
-    df = df = validate_csv(uploaded_file)
+    df = validate_csv(uploaded_file)
     if df is not None:
         st.success(f"✅ Successfully loaded {len(df)} valid feedback entries.")
         st.write(df.head())
@@ -25,11 +34,7 @@ if uploaded_file:
         if st.button("Analyze Feedback"):
             with st.spinner("Analyzing with OpenAI..."):
                 analyzer = OpenAIAnalyzer()
-
-                # Apply AI analysis
-                df["Sentiment"] = df[column_name].apply(analyzer.analyze_sentiment)
-                df["Category"] = df[column_name].apply(analyzer.classify_category)
-                summary = analyzer.summarize_feedback(df[column_name].tolist())
+                df, summary = analyze_feedback_df(df, analyzer, column_name)
 
             # Display summary
             st.subheader("📊 Summary of Common Feedback")

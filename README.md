@@ -4,6 +4,10 @@ This is an MVP (Minimum Viable Product) of an AI-powered tool that helps product
 
 ---
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
+---
+
 ## 🔍 Features
 
 - 📁 Upload customer feedback via CSV
@@ -16,6 +20,8 @@ This is an MVP (Minimum Viable Product) of an AI-powered tool that helps product
 
 
 ## 🚀 Demo
+
+![App Demo](resources/demo-screenshot.png)
 
 > Coming soon — you can run it locally using the instructions below.
 
@@ -44,8 +50,6 @@ cd feedback-analyzer
 
 ```bash
 python -m venv venv
-source venv/bin/activate  # macOS/Linux
-venv\Scripts\activate     # Windows
 ```
 
 ### 3. Install dependencies
@@ -74,6 +78,8 @@ streamlit run app/main.py
 
 To use this app, upload a **CSV file** that contains a column with user feedback.
 
+You can try it with the provided [example file](resources/sample_feedbacks.csv).
+
 #### ✅ Required Column
 
 - `feedback` (case-insensitive)
@@ -96,4 +102,10 @@ pytest tests/
 
 ## 🤖 AI Assistance Disclosure
 
-This project was developed with the assistance of AI tools, including [ChatGPT](https://openai.com/chatgpt), to help generate code, refactor, and document the project. All code has been reviewed, refactored, and organized by the author.
+This project was developed with the assistance of AI tools, including [ChatGPT](https://openai.com/chatgpt) and [GitHub Copilot](https://github.com/features/copilot), to help generate code, refactor, and document the project. All code has been reviewed, refactored, and organized by the author.
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](./LICENSE).
