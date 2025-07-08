@@ -1,6 +1,7 @@
 from openai import OpenAI
 from typing import List, Optional
 from openai.types.chat import ChatCompletionMessageParam
+import os
 
 from config import Settings
 
@@ -10,10 +11,15 @@ class OpenAIAnalyzer:
     Handles sentiment analysis, categorization, and summarization using OpenAI's GPT model.
     """
 
-    def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or Settings.OPENAI_API_KEY
-        self.client = OpenAI(api_key=self.api_key)
-        self.model = "gpt-4"
+    def __init__(self, api_key: Optional[str] = None, model: str = None):
+        if not model:
+            raise ValueError("You must specify a GPT model name.")
+        self.model = model
+        # Prefer runtime environment variable, fallback to config
+        self._api_key = api_key or os.environ.get("OPENAI_API_KEY") or Settings.OPENAI_API_KEY
+        if not self._api_key:
+            raise ValueError("OpenAI API key is not set. Please set the OPENAI_API_KEY environment variable or .env file.")
+        self.client = OpenAI(api_key=self._api_key)
 
     def _chat_complete(self, messages: List[ChatCompletionMessageParam], temperature: float = 0.0) -> str:
         response = self.client.chat.completions.create(

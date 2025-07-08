@@ -6,6 +6,8 @@ class MockOpenAIAnalyzer(OpenAIAnalyzer):
     Mocked version of OpenAIAnalyzer for unit testing.
     Overrides _chat_complete to avoid real API calls.
     """
+    def __init__(self, api_key="mock-key", model="gpt-4"):
+        super().__init__(api_key=api_key, model=model)
     def _chat_complete(self, messages, temperature=0.0):
         prompt = messages[0]["content"]
         if "sentiment" in prompt.lower():
@@ -19,7 +21,7 @@ class MockOpenAIAnalyzer(OpenAIAnalyzer):
 
 @pytest.fixture
 def analyzer():
-    return MockOpenAIAnalyzer(api_key="mock-key")
+    return MockOpenAIAnalyzer(api_key="mock-key", model="gpt-4")
 
 
 def test_analyze_sentiment(analyzer):
@@ -40,3 +42,13 @@ def test_summarize_feedback(analyzer):
     ]
     result = analyzer.summarize_feedback(feedback)
     assert "dark mode" in result.lower()
+
+def test_model_required():
+    with pytest.raises(ValueError):
+        OpenAIAnalyzer(api_key="mock-key")
+
+def test_missing_api_key(monkeypatch):
+    # Unset the OPENAI_API_KEY environment variable if set
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    with pytest.raises(ValueError):
+        OpenAIAnalyzer()
