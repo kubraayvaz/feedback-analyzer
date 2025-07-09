@@ -8,13 +8,13 @@ class MockOpenAIAnalyzer(OpenAIAnalyzer):
     """
     def __init__(self, api_key="mock-key", model="gpt-4"):
         super().__init__(api_key=api_key, model=model)
-    def _chat_complete(self, messages, temperature=0.0):
-        prompt = messages[0]["content"]
-        if "sentiment" in prompt.lower():
+    def _chat_complete(self, prompt_template, variables):
+        formatted = prompt_template.template.format(**variables)
+        if "sentiment" in formatted.lower():
             return "Positive"
-        elif "classify" in prompt.lower():
+        elif "classify" in formatted.lower():
             return "Feature Request"
-        elif "summarize" in prompt.lower():
+        elif "summarize" in formatted.lower():
             return "Users want dark mode and faster load times."
         return "Unknown"
 
