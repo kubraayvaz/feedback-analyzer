@@ -19,3 +19,8 @@ def test_validate_csv_integration():
     df = validate_csv(csv)
     assert df is not None
     assert list(df["feedback"]) == ["A", "B"]
+
+def test_validate_csv_missing_column():
+    csv = io.StringIO("comment\nGood\nBad\n")
+    df = validate_csv(csv)
+    assert df is None
