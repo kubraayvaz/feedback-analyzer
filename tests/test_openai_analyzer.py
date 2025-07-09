@@ -52,3 +52,14 @@ def test_missing_api_key(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     with pytest.raises(ValueError):
         OpenAIAnalyzer()
+        
+def test_chat_complete_runtime_error():
+    class FailingAnalyzer(OpenAIAnalyzer):
+        def __init__(self):
+            super().__init__(api_key="fake-key", model="gpt-3.5-turbo")
+        def _chat_complete(self, messages, temperature=0.0):
+            raise RuntimeError("Simulated OpenAI failure.")
+
+    analyzer = FailingAnalyzer()
+    with pytest.raises(RuntimeError, match="Simulated OpenAI failure."):
+        analyzer.analyze_sentiment("This is a test.")

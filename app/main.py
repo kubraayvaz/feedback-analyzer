@@ -45,17 +45,23 @@ def main() -> None:
     uploaded_file = st.file_uploader("Upload a CSV file with a 'Feedback' column", type=["csv"])
     column_name = "feedback"
 
-    if uploaded_file:
-        df = validate_csv(uploaded_file)
-        if df is not None:
-            st.success(f"✅ Successfully loaded {len(df)} valid feedback entries.")
-            st.write(df.head())
+    try:
+        if uploaded_file:
+            df = validate_csv(uploaded_file)
+            if df is not None:
+                st.success(f"✅ Successfully loaded {len(df)} valid feedback entries.")
+                st.write(df.head())
 
-            if st.button("Analyze Feedback"):
-                with st.spinner("Analyzing with OpenAI..."):
-                    analyzer = OpenAIAnalyzer(model=model_choice)
-                    analyzed_df, summary = analyze_feedback_df(df, analyzer, column_name)
-                render_dashboard(analyzed_df, summary)
+                if st.button("Analyze Feedback"):
+                    try:
+                        with st.spinner("Analyzing with OpenAI..."):
+                            analyzer = OpenAIAnalyzer(model=model_choice)
+                            analyzed_df, summary = analyze_feedback_df(df, analyzer, column_name)
+                        render_dashboard(analyzed_df, summary)
+                    except Exception as analysis_error:
+                        st.error(f"❌ An error occurred during feedback analysis: {analysis_error}")
+    except Exception as e:
+        st.error(f"❌ Unexpected error: {e}")
 
 if __name__ == "__main__":
     main()

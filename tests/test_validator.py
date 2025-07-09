@@ -41,3 +41,13 @@ def test_feedback_column_case_insensitive(monkeypatch):
     assert df is not None
     assert list(df.columns) == ["feedback"]
     assert set(df["feedback"]) == {"A", "B"}
+
+def test_csv_with_mixed_valid_and_empty_feedback(monkeypatch):
+    csv = io.StringIO("feedback\n\n  \nValid feedback\n")
+    dummy_st = DummyStreamlit()
+    monkeypatch.setattr(validator, "st", dummy_st)
+    df = validator.validate_csv(csv)
+    assert df is not None
+    assert list(df.columns) == ["feedback"]
+    assert df.shape[0] == 1
+    assert df.iloc[0]["feedback"] == "Valid feedback"

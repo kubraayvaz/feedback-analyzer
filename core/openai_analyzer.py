@@ -22,12 +22,15 @@ class OpenAIAnalyzer:
         self.client = OpenAI(api_key=self._api_key)
 
     def _chat_complete(self, messages: List[ChatCompletionMessageParam], temperature: float = 0.0) -> str:
-        response = self.client.chat.completions.create(
-            model=self.model,
-            messages=messages,
-            temperature=temperature
-        )
-        return response.choices[0].message.content.strip()
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                temperature=temperature
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as e:
+            raise RuntimeError(f"❌ OpenAI API call failed: {e}")
 
     def analyze_sentiment(self, feedback: str) -> str:
         prompt = f"What is the sentiment of this feedback: \"{feedback}\"? Reply with Positive, Neutral, or Negative."
