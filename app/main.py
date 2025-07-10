@@ -58,6 +58,15 @@ def main() -> None:
                             analyzer = OpenAIAnalyzer(model=model_choice)
                             analyzed_df, summary = analyze_feedback_df(df, analyzer, column_name)
                         render_dashboard(analyzed_df, summary)
+                        # Encode analyzed DataFrame as CSV for download
+                        csv = analyzed_df.to_csv(index=False).encode('utf-8')
+                        # Provide a download button to export the analysis result
+                        st.download_button(
+                            label="📥 Download Analyzed Data as CSV",
+                            data=csv,
+                            file_name="analyzed_feedback.csv",
+                            mime="text/csv"
+                        )
                     except Exception as analysis_error:
                         st.error(f"❌ An error occurred during feedback analysis: {analysis_error}")
     except Exception as e:
